@@ -1,6 +1,10 @@
+'''
+library required: pandas, pandastable, tkinter, csv
+
+'''
+
 import tkinter as tk
 import tkinter.filedialog as filed
-import csv
 import pandas as pd
 
 class MainApplication(tk.Frame):
@@ -17,11 +21,16 @@ class MainApplication(tk.Frame):
         var.set ('Hi!How Are yOU!')
     
     def open_csv(self):
+        global df
         filename =  filed.askopenfilename(initialdir = "/",title = "Select file",filetypes = (("csv files","*.csv"),("all files","*.*")))
-        df = pd.read_csv(open_csv.filename)
-
-        print (self.df)
-
+        df = pd.read_csv(filename,sep = ',')
+        scrollbar = tk.Scrollbar(root, orient="vertical")
+        lis = tk.Listbox(root, width=300, height=300, yscrollcommand=scrollbar.set)
+        scrollbar.config(command=lis.yview)
+        lis.pack(side="left",fill="both", expand=True)
+        for row in df:
+            lis.insert(df.[column])
+        
     def __init__(self, parent, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
         self.parent = parent
@@ -44,6 +53,7 @@ class MainApplication(tk.Frame):
         self.button = tk.Button(self.parent, text="Exit Program",command=self.close_program)
         self.button.pack()
         
+        
 
 
     
@@ -57,4 +67,10 @@ if __name__ == "__main__":
     print ("Hello")
     print ("Hello")
     print ("Hello")
+
+
+''' Farrell, D 2016 DataExplore: An Application for General Data Analysis in Research and Education. Journal of Open
+Research Software, 4: e9, DOI: http://dx.doi.org/10.5334/jors.94 '''
+
+
     
