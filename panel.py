@@ -1,5 +1,5 @@
 '''
-library required: pandas, pandastable, tkinter, csv
+library required: pandas, pandastable, tkinter, csv, os
 
 '''
 
@@ -7,6 +7,7 @@ import tkinter as tk
 import tkinter.filedialog as filed
 import pandas as pd
 import csv
+import os
 
 class MainApplication(tk.Frame):
     
@@ -22,21 +23,21 @@ class MainApplication(tk.Frame):
         var.set ('Hi!How Are yOU!')
     
     def f_open_csv(self):
-        filename =  filed.askopenfile(initialdir = "/",title = "Select file",filetypes = (("csv files","*.csv"),("all files","*.*")))
+        filename =  filed.askopenfile(initialdir = os.getcwd(),title = "Select file",filetypes = (("csv files","*.csv"),("all files","*.*")))
         opendata = csv.reader(filename)
         opendatalist = []
         scrollbar = tk.Scrollbar(root, orient="vertical")
-        lis = tk.Listbox(root, width=300, height=300 , yscrollcommand=scrollbar.set)
+        lis = tk.Listbox(root, width=150, height=150 , yscrollcommand=scrollbar.set)
         scrollbar.config(command=lis.yview)
-        lis.pack(side="left",fill="both", expand=True)
-        lis.insert( tk.END, "ABCDE")
+        lis.place(x=700,y=50,width=500,height=2000)
+        #pack(side="left",fill="both", expand=True)
+        lis.insert( tk.END)
         for row in opendata:
             if len (row) !=0:
                 opendatalist = opendatalist + [row]
                 lis.insert(tk.END,row)
         
-        #for row in df:
-        #    lis.insert(df.[column])
+
         
     def __init__(self, parent, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
@@ -49,16 +50,24 @@ class MainApplication(tk.Frame):
         width, height = root.winfo_screenwidth(), root.winfo_screenheight()
         self.parent.geometry('%dx%d+0+0' % (width,height))
         self.parent.resizable(False, False)
+        self.parent.viewerPanel = tk.Frame(root,bg="red")
+        self.parent.controlerPanel = tk.Frame(root,bg="blue")
+        self.parent.controlerPanel.place (x=20,y=30, width=200,height=200)
+        self.parent.viewerPanel.place(x=220,y=30, width=200,height=200)
+        
 
     def create_widgets(self):
         self.label = tk.Label(self.parent, text="Welcome to Winnington RFID Decoder", font=("Calbiri", 20))
         self.label.pack()
         self.button = tk.Button(self.parent, text="Merge",command=self.f_start_merge)
-        self.button.pack()
+        self.button.place(x=50,y=50,width=100,height=50)
+        #self.button.pack()
         self.button = tk.Button(self.parent, text="Opencsv",command=self.f_open_csv)
-        self.button.pack()
+        self.button.place(x=50,y=100,width=100,height=50)
+        #self.button.pack()
         self.button = tk.Button(self.parent, text="Exit Program",command=self.f_close_program)
-        self.button.pack()
+        self.button.place(x=50,y=150,width=100,height=50)
+        #self.button.pack()
         
         
 
