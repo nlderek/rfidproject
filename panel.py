@@ -6,13 +6,14 @@ library required: pandas, pandastable, tkinter, csv
 import tkinter as tk
 import tkinter.filedialog as filed
 import pandas as pd
+import csv
 
 class MainApplication(tk.Frame):
     
-    def close_program (self): 
+    def f_close_program (self): 
         root.destroy()
          
-    def start_merge(self):
+    def f_start_merge(self):
         var = tk.StringVar() 
         l = tk.Label(self.parent, 
             textvariable=var,
@@ -20,16 +21,22 @@ class MainApplication(tk.Frame):
         l.pack()
         var.set ('Hi!How Are yOU!')
     
-    def open_csv(self):
-        global df
-        filename =  filed.askopenfilename(initialdir = "/",title = "Select file",filetypes = (("csv files","*.csv"),("all files","*.*")))
-        df = pd.read_csv(filename,sep = ',')
+    def f_open_csv(self):
+        filename =  filed.askopenfile(initialdir = "/",title = "Select file",filetypes = (("csv files","*.csv"),("all files","*.*")))
+        opendata = csv.reader(filename)
+        opendatalist = []
         scrollbar = tk.Scrollbar(root, orient="vertical")
-        lis = tk.Listbox(root, width=300, height=300, yscrollcommand=scrollbar.set)
+        lis = tk.Listbox(root, width=300, height=300 , yscrollcommand=scrollbar.set)
         scrollbar.config(command=lis.yview)
         lis.pack(side="left",fill="both", expand=True)
-        for row in df:
-            lis.insert(df.[column])
+        lis.insert( tk.END, "ABCDE")
+        for row in opendata:
+            if len (row) !=0:
+                opendatalist = opendatalist + [row]
+                lis.insert(tk.END,row)
+        
+        #for row in df:
+        #    lis.insert(df.[column])
         
     def __init__(self, parent, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
@@ -46,11 +53,11 @@ class MainApplication(tk.Frame):
     def create_widgets(self):
         self.label = tk.Label(self.parent, text="Welcome to Winnington RFID Decoder", font=("Calbiri", 20))
         self.label.pack()
-        self.button = tk.Button(self.parent, text="Merge",command=self.start_merge)
+        self.button = tk.Button(self.parent, text="Merge",command=self.f_start_merge)
         self.button.pack()
-        self.button = tk.Button(self.parent, text="Opencsv",command=self.open_csv)
+        self.button = tk.Button(self.parent, text="Opencsv",command=self.f_open_csv)
         self.button.pack()
-        self.button = tk.Button(self.parent, text="Exit Program",command=self.close_program)
+        self.button = tk.Button(self.parent, text="Exit Program",command=self.f_close_program)
         self.button.pack()
         
         
