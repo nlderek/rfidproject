@@ -6,6 +6,9 @@ import os
 import pandas as pd
 import numpy as np
 
+EVEN_ROW_COLOUR = '#CCE6FF'
+GRID_LINE_COLOUR = '#ccc'
+
  
 class MDIFrame(wx.MDIParentFrame):
     def __init__(self,*args, **kwargs):
@@ -15,6 +18,8 @@ class MDIFrame(wx.MDIParentFrame):
     def InitUI(self):  
         menubar = wx.MenuBar() 
         optionmenu = wx.Menu()
+        tableMenuitem = optionmenu.Append(wx.NewId(),"Table")
+        self.Bind(wx.EVT_MENU, self.Tabler, tableMenuitem)
         encodeMenuitem = optionmenu.Append(wx.NewId(),"Encode")
         self.Bind(wx.EVT_MENU, self.Encoder, encodeMenuitem)
         decodeMenuitem = optionmenu.Append(wx.NewId(),"Decode")
@@ -27,20 +32,21 @@ class MDIFrame(wx.MDIParentFrame):
     def OnExit(self, event):
         self.Close(True)  
 		
-    def Decoder(self, event): 
+    def Tabler(self, event): 
         #win = wx.MDIChildFrame(self, -1,  "Decoder Window",size = (1024,600) )
-        win = DECODEFrame(self)
+        win = TABLEFrame(self)
         win.Show(True)
         win.SetIcon(wx.Icon(os.getcwd() + "\icons\decode.ico"))
-            
+    def Decoder(self, event): 
+        win = wx.MDIChildFrame(self, -1, "Decoder Window",size = (800,600) )
+        win.Show(True)
+        win.SetIcon(wx.Icon(os.getcwd() + "\icons\decode.ico"))
     def Encoder(self, event): 
         win = wx.MDIChildFrame(self, -1, "Encoder Window",size = (800,600) )
         win.Show(True)
         win.SetIcon(wx.Icon(os.getcwd() + "\icons\encode.ico"))
 
 class DataTable(wx.grid.GridTableBase):
-    EVEN_ROW_COLOUR = '#CCE6FF'
-    GRID_LINE_COLOUR = '#ccc'
 
     def __init__(self, data=None):
         wx.grid.GridTableBase.__init__(self)
@@ -80,13 +86,9 @@ class DataTable(wx.grid.GridTableBase):
             attr.SetBackgroundColour(EVEN_ROW_COLOUR)
         return attr
 
-class DECODEFrame(wx.MDIChildFrame): 
+class TABLEFrame(wx.MDIChildFrame): 
     def __init__(self,parent):
-        wx.MDIChildFrame.__init__(self, parent, title= "Decoder Window", size = (1024,600))
-        panel = wx.Panel(self,-1)
-        self._init_gui()
-
-    def _init_gui(self):
+        wx.MDIChildFrame.__init__(self, parent,pos= ((mw*0.2),0), title= "Decoder Window", size = ((mw*0.79),(mh*0.9)))
         df = pd.DataFrame(np.random.random((10,5)))
         table = DataTable(df)
 
@@ -111,9 +113,11 @@ class DECODEFrame(wx.MDIChildFrame):
 #        self.SetColLabelSize(30)
 #        self.table = DataTable()
 
-app = wx.App() 
+app = wx.App()
 frame = MDIFrame() 
 frame.SetIcon(wx.Icon(os.getcwd() + "\icons\wtonlogo.ico"))
 frame.Show()
 frame.Maximize(True)
+mw, mh = frame.GetSize()
+
 app.MainLoop()
