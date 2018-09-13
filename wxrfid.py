@@ -8,18 +8,19 @@ import numpy as np
 
 EVEN_ROW_COLOUR = '#CCE6FF'
 GRID_LINE_COLOUR = '#ccc'
+BACKGROUND_COLOUR = '#ccc'
 
  
 class MDIFrame(wx.MDIParentFrame):
     def __init__(self,*args, **kwargs):
-        wx.MDIParentFrame.__init__(self, None, -1, "Winnington RFID ")#, size = (600,400))
+        wx.MDIParentFrame.__init__(self, None, -1, "Winnington RFID ", style=wx.DEFAULT_DIALOG_STYLE|wx.MAXIMIZE_BOX ^ wx.RESIZE_BORDER)#, size = (600,400))
         self.InitUI()
     # Set Menubar on parent frame
     def InitUI(self):  
         menubar = wx.MenuBar() 
         optionmenu = wx.Menu()
-        tableMenuitem = optionmenu.Append(wx.NewId(),"Table")
-        self.Bind(wx.EVT_MENU, self.Tabler, tableMenuitem)
+        #tableMenuitem = optionmenu.Append(wx.NewId(),"Table")
+        #self.Bind(wx.EVT_MENU, self.Tabler, tableMenuitem)
         encodeMenuitem = optionmenu.Append(wx.NewId(),"Encode")
         self.Bind(wx.EVT_MENU, self.Encoder, encodeMenuitem)
         decodeMenuitem = optionmenu.Append(wx.NewId(),"Decode")
@@ -32,19 +33,20 @@ class MDIFrame(wx.MDIParentFrame):
     def OnExit(self, event):
         self.Close(True)  
 		
-    def Tabler(self, event): 
-        #win = wx.MDIChildFrame(self, -1,  "Decoder Window",size = (1024,600) )
-        win = TABLEFrame(self)
-        win.Show(True)
-        win.SetIcon(wx.Icon(os.getcwd() + "\icons\decode.ico"))
     def Decoder(self, event): 
-        win = wx.MDIChildFrame(self, -1, "Decoder Window",size = (800,600) )
+        #win = wx.MDIChildFrame(self, -1,  "Decoder Window",size = (1024,600) )
+        win = DECODEFrame(self)
         win.Show(True)
         win.SetIcon(wx.Icon(os.getcwd() + "\icons\decode.ico"))
+    #def Decoder(self, event): 
+    #    win = wx.MDIChildFrame(self, -1, "Decoder Window",size = (800,600) )
+    #    win.Show(True)
+    #    win.SetIcon(wx.Icon(os.getcwd() + "\icons\decode.ico"))
     def Encoder(self, event): 
         win = wx.MDIChildFrame(self, -1, "Encoder Window",size = (800,600) )
         win.Show(True)
         win.SetIcon(wx.Icon(os.getcwd() + "\icons\encode.ico"))
+
 
 class DataTable(wx.grid.GridTableBase):
 
@@ -86,9 +88,17 @@ class DataTable(wx.grid.GridTableBase):
             attr.SetBackgroundColour(EVEN_ROW_COLOUR)
         return attr
 
-class TABLEFrame(wx.MDIChildFrame): 
+class DECODEFrame(wx.MDIChildFrame): 
+    #def onButton(self, event):
+    #    print ("Button pressed.")
+    
     def __init__(self,parent):
         wx.MDIChildFrame.__init__(self, parent,pos= ((mw*0.2),0), title= "Decoder Window", size = ((mw*0.79),(mh*0.9)))
+        
+        panel = wx.Panel(self, wx.ID_ANY)
+        #button = wx.Button(panel, wx.ID_ANY, 'Test', (10, 10))
+        #button.Bind(wx.EVT_BUTTON, onButton)
+        
         df = pd.DataFrame(np.random.random((10,5)))
         table = DataTable(df)
 
@@ -96,12 +106,32 @@ class TABLEFrame(wx.MDIChildFrame):
         grid.SetTable(table,takeOwnership=True)
         grid.AutoSizeColumns()
 
-        sizer = wx.BoxSizer(wx.VERTICAL)
-        sizer.Add(grid,1,wx.EXPAND)
-        self.SetSizer(sizer)
+        topsizer = wx.BoxSizer(wx.VERTICAL)
+        panelsizer = wx.BoxSizer(wx.HORIZONTAL)
+        tablesizer = wx.BoxSizer(wx.VERTICAL)
+        
+        panelsizer.Add(panel,100)
+        tablesizer.Add(table,200, wx.EXPAND)
+       
+        topsizer.Add(panelsizer,100)
+        topsizer.Add(tablesizer,200)
+
+        self.panel.SetSizer(topsizer)
+        topsizer.Fit(self)
+
+        #sizer = wx.BoxSizer(wx.VERTICAL)
+        #sizer.Add(self,"one", 0, wx.EXPAND)
+        #sizer.Add(self,"two", 0, wx.EXPAND)
+        #sizer.Add(self,"three", 0, wx.EXPAND)
+        #sizer.Add(self,"four", 0, wx.EXPAND)
+        ##sizer = wx.FlexGridSizer(1,4,0)
+        ##sizer.Add(panel,1,wx.EXPAND)
+        ##sizer.Add(grid,1,wx.EXPAND)
+        ##sizer.Add((-1, -1))
+        ##self.SetSizer(sizer)
 
         self.Bind(wx.EVT_CLOSE, self.quit)
-
+    
     def quit(self,event):
         self.Destroy()
 #class DataGrid(gridlib.Grid):

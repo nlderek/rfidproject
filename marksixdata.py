@@ -1,3 +1,8 @@
+'''
+pip install lxml
+pip install pandas
+'''
+
 import pandas as pd
 import csv
 
