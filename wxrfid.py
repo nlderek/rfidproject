@@ -8,7 +8,7 @@ import numpy as np
 
 EVEN_ROW_COLOUR = '#CCE6FF'
 GRID_LINE_COLOUR = '#ccc'
-BACKGROUND_COLOUR = '#ccc'
+BACKGROUND_COLOUR = '#deedee'
 
 #Frame: MainFrame --Start-- 
 class MDIFrame(wx.MDIParentFrame):
@@ -94,12 +94,15 @@ class DataTable(wx.grid.GridTableBase):
 #Object: Another way to make table (not use)  --Finish--
 '''
 
+#Object: Button inside Decode Frame
+
 #Object: Table in Decode Frame --Start-- 
 class MyGrid(wx.grid.Grid):
+    
     def __init__(self,parent):
         wx.grid.Grid.__init__(self, parent)
         self.CreateGrid(12,8)
-
+                        
         self.Bind(wx.grid.EVT_GRID_CELL_LEFT_CLICK, self.OnCellLeftClick)
         self.Bind(wx.grid.EVT_GRID_CELL_RIGHT_CLICK, self.OnCellRightClick)
         self.Bind(wx.grid.EVT_GRID_CELL_LEFT_DCLICK, self.OnCellLeftDClick)
@@ -289,14 +292,52 @@ class MyGrid(wx.grid.Grid):
 
 #Object: Table in Decode Frame --Finish-- 
 
+'''#Object: Button in Decode Frame --Start--
+class buildButtons(wx.grid.Grid):
+    def __init__(self,parent):
+        wx.grid.Grid.__init__(self, parent)
+        sizer = wx.BoxSizer(wx.HORIZONTAL)
+        buttonOne = wx.Button(panel, id=wx.ID_ANY, label="One", name="one")
+        buttonTwo = wx.Button(panel, id=wx.ID_ANY, label="Two", name="two")
+        buttonThree = wx.Button(panel, id=wx.ID_ANY, label="Three", name="three")
+        buttons = [buttonOne, buttonTwo, buttonThree]
+ 
+        for button in buttons:
+            self.buildButtons(button, sizer)
+ 
+        panel.SetSizer(sizer)
+
+    def buildButtons(self, btn, sizer):
+        """"""
+        btn.Bind(wx.EVT_BUTTON, self.onButton)
+        sizer.Add(btn, 0, wx.ALL, 5)
+    
+    def onButton(self, event):
+        """
+        This method is fired when its corresponding button is pressed
+        """
+        button = event.GetEventObject()
+        print ("The button you pressed was labeled: " + button.GetLabel())
+        print ("The button's name is " + button.GetName())
+ 
+        button_id = event.GetId()
+        button_by_id = self.FindWindowById(button_id)
+        print ("The button you pressed was labeled: " + button_by_id.GetLabel())
+        print ("The button's name is " + button_by_id.GetName())
+
+#Object: Button in Decode Frame --Finish-- '''
+
 #Frame: Decoder Frame --Start--         
 class DECODEFrame(wx.MDIChildFrame):
     def __init__(self,parent):
         wx.MDIChildFrame.__init__(self, parent, wx.ID_ANY, pos= ((mw*0.2),0), title= "Decoder Window", size = ((mw*0.79),(mh*0.9)))
         panel = wx.Panel(self, wx.ID_ANY)
         myGrid = MyGrid(panel)
+        csvButton = wx.Button(panel,-1,'Choose data file to decode')
         sizer = wx.BoxSizer(wx.VERTICAL)
-        sizer.Add(myGrid, 1, wx.EXPAND)
+        sizer.Add(myGrid, 10, wx.EXPAND)
+        sizer.Add(csvButton,0,wx.LEFT| wx.ALL,5)
+        sizer.SetSizeHints(panel)
         panel.SetSizer(sizer)
     
     
