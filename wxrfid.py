@@ -334,11 +334,24 @@ class DECODEFrame(wx.MDIChildFrame):
         panel = wx.Panel(self, wx.ID_ANY)
         myGrid = MyGrid(panel)
         csvButton = wx.Button(panel,-1,'Choose data file to decode')
+        csvButton.Bind(wx.EVT_BUTTON, self.opencsvButton)
         sizer = wx.BoxSizer(wx.VERTICAL)
-        sizer.Add(myGrid, 10, wx.EXPAND)
         sizer.Add(csvButton,0,wx.LEFT| wx.ALL,5)
+        sizer.Add(myGrid, 10, wx.EXPAND)
         sizer.SetSizeHints(panel)
         panel.SetSizer(sizer)
+
+    def opencsvButton(self,event):
+        # Create and show the Open FileDialog
+        wildcard = "CSV Source (*.csv)|*.csv"
+        dlg = wx.FileDialog(self,message='Choose a csv file', defaultFile="",wildcard= wildcard, style= wx.FD_OPEN |wx.FD_MULTIPLE |wx.FD_CHANGE_DIR )
+        
+        if dlg.ShowModal() == wx.ID_OK:
+            paths = dlg.GetPaths()
+            print(" You chose the following files: ")
+            for path in paths:
+                print (path)
+        dlg.Destroy()
     
     
     '''
