@@ -4,7 +4,7 @@ import wx
 import wx.grid
 import os
 import pandas as pd
-import numpy as np
+import numpy as np  
 
 EVEN_ROW_COLOUR = '#CCE6FF'
 GRID_LINE_COLOUR = '#ccc'
