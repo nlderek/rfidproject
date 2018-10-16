@@ -1,11 +1,20 @@
-import csv
-import tkinter as tk
-import tkinter.filedialog as filed
+import sys
+import os
+from PIL import Image
+import numpy as np
+import matplotlib.pyplot as plt
+import time
+from statistics import mean
 
-filename =  filed.askopenfile(initialdir = "/",title = "Select file",filetypes = (("csv files","*.csv"),("all files","*.*")))
-opendata = csv.reader(filename)
-opendatalist = []
-for row in opendata:
-            if len (row) !=0:
-                opendatalist = opendatalist + [row]
-print (opendatalist)
+a= Image.open(os.getcwd() + '\\recognimage\\images\\numbers\\0.1.png')
+width, height = a.size
+pixel_values = numpy.array(pixel_values).reshape((width, height, 3)
+
+print (pixel_values)
+#b = np.asarray(a)
+#c = b[0]
+#d = c[2,0]
+
+#print(d)
+
+
