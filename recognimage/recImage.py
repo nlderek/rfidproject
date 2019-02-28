@@ -7,6 +7,19 @@ from statistics import mean
 
 cpath = os.getcwd()
 
+def createExamples():
+    numberArrayExamples = open('numArEx.txt','a')
+    numbersWeHave = range(1,10)
+    for eachNum in numbersWeHave:
+        #print eachNum
+        for futherNum in numbersWeHave:
+            # you could also literally add it *.1 and have it create
+            # an actual float, but, since in the end we are going
+            # to use it as a string, this way will work.
+            print(str(eachNum)+'.'+str(furtherNum))
+            imgFilePath = cpath +'images/numbers/'+str(eachNum)+'.'+str(furtherNum)+'.png'
+            ei = Image.open(imgFile)
+
 
 def threshold (imageArray):
     balanceAr = []
